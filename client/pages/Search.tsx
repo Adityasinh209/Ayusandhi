@@ -132,7 +132,7 @@ export default function SearchPage() {
             Search NAMASTE and ICD‑11 TM2 terms. Start typing to see results.
           </p>
         </div>
-        <div className="mt-6 grid gap-4 md:gap-6 max-w-3xl">
+        <div className="mt-6 grid gap-4 md:gap-6 grid-cols-1 md:grid-cols-2 max-w-5xl">
           <Card>
             <CardHeader>
               <CardTitle className="text-base">Search Terms</CardTitle>
