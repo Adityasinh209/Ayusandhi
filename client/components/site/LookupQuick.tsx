@@ -24,16 +24,25 @@ export function LookupQuick() {
   const [data, setData] = useState<any | null>(null);
 
   async function onLookup(c?: string) {
-    const value = (c ?? code).trim();
-    if (!value) return;
+    const raw = (c ?? code).trim();
+    if (!raw) return;
+    const value = raw.toUpperCase();
     setLoading(true);
     setError(null);
     setData(null);
     try {
-      const res = await fetch(`${BASE_URL}/lookup/${encodeURIComponent(value)}`);
-      const json = await res.json().catch(() => null);
+      let res = await fetch(`${BASE_URL}/lookup/${encodeURIComponent(value)}`);
+      let json = await res.json().catch(() => null);
       if (!res.ok) {
-        setError(json?.error || "Code not found");
+        // Fallback: try search endpoint to find record by code text
+        const s = await fetch(`${BASE_URL}/search?query=${encodeURIComponent(value)}`);
+        const sJson = await s.json().catch(() => null);
+        const results = Array.isArray(sJson) ? sJson : Array.isArray(sJson?.results) ? sJson.results : Array.isArray(sJson?.data) ? sJson.data : [];
+        if (results.length > 0) {
+          setData(results[0]);
+        } else {
+          setError(json?.error || "Code not found");
+        }
       } else {
         setData(json);
       }
