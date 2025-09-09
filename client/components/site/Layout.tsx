@@ -3,7 +3,12 @@ import { Header } from "./Header";
 
 export function Layout({ children }: PropsWithChildren) {
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col">
+    <div className="relative min-h-screen bg-background text-foreground flex flex-col">
+      <div className="absolute inset-0 -z-10 pointer-events-none">
+        <div className="app-bg-gradient absolute inset-0" />
+        <div className="app-bg-grid absolute inset-0" />
+        <div className="app-bg-icons absolute inset-0" />
+      </div>
       <Header />
       <main className="flex-1">
         {children}
