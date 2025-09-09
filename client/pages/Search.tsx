@@ -11,7 +11,7 @@ const BASE_URL = "https://namaste-te4u.onrender.com/api/v1/terminology";
 
 function useDebounced<T>(value: T, delay = 400) {
   const [v, setV] = useState(value);
-  useMemo(() => {
+  useEffect(() => {
     const id = setTimeout(() => setV(value), delay);
     return () => clearTimeout(id);
   }, [value, delay]);
