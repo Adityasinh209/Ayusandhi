@@ -13,7 +13,7 @@ export default function Index() {
               FHIR‑compliant terminology service
             </div>
             <h1 className="text-3xl md:text-5xl font-extrabold leading-tight tracking-tight">
-              Dual Coding Integration for Ayush & ICD‑11
+              Ayusandhi
             </h1>
             <p className="text-muted-foreground text-base md:text-lg max-w-prose">
               Search NAMASTE & ICD‑11 TM2 terminology with a clean, modern interface. Built for clinicians and developers with healthcare‑grade UX and accessibility.
