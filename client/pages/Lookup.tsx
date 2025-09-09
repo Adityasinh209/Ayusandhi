@@ -32,8 +32,8 @@ function Entry({ label, value }: { label: string; value: any }) {
         {Array.isArray(value)
           ? value.join(", ")
           : typeof value === "object"
-          ? JSON.stringify(value)
-          : String(value)}
+            ? JSON.stringify(value)
+            : String(value)}
       </div>
     </div>
   );
@@ -47,19 +47,29 @@ export default function LookupPage() {
 
   function normalizeCode(s: string) {
     const raw = s.trim();
-    return { raw, upper: raw.toUpperCase(), stripped: raw.replace(/[^A-Za-z0-9]/g, "").toUpperCase() };
+    return {
+      raw,
+      upper: raw.toUpperCase(),
+      stripped: raw.replace(/[^A-Za-z0-9]/g, "").toUpperCase(),
+    };
   }
 
   function extractCode(obj: any): string | null {
-    const c = getVal(obj, ["namasteCode", "namaste_code", "code", "id", "Code", "CODE"], null);
+    const c = getVal(
+      obj,
+      ["namasteCode", "namaste_code", "code", "id", "Code", "CODE"],
+      null,
+    );
     return typeof c === "string" ? c : null;
   }
 
   function flattenStrings(obj: any, depth = 0): string[] {
     if (depth > 3 || obj == null) return [];
     if (typeof obj === "string") return [obj];
-    if (Array.isArray(obj)) return obj.flatMap((v) => flattenStrings(v, depth + 1));
-    if (typeof obj === "object") return Object.values(obj).flatMap((v) => flattenStrings(v, depth + 1));
+    if (Array.isArray(obj))
+      return obj.flatMap((v) => flattenStrings(v, depth + 1));
+    if (typeof obj === "object")
+      return Object.values(obj).flatMap((v) => flattenStrings(v, depth + 1));
     return [];
   }
 
@@ -88,14 +98,25 @@ export default function LookupPage() {
     setError(null);
     setData(null);
     try {
-      let res = await fetch(`${BASE_URL}/lookup/${encodeURIComponent(n.upper)}`);
+      let res = await fetch(
+        `${BASE_URL}/lookup/${encodeURIComponent(n.upper)}`,
+      );
       let json = await res.json().catch(() => null);
       if (!res.ok || !json) {
-        const s = await fetch(`${BASE_URL}/search?query=${encodeURIComponent(n.upper)}`);
+        const s = await fetch(
+          `${BASE_URL}/search?query=${encodeURIComponent(n.upper)}`,
+        );
         const sJson = await s.json().catch(() => null);
-        const arr = Array.isArray(sJson) ? sJson : Array.isArray(sJson?.results) ? sJson.results : Array.isArray(sJson?.data) ? sJson.data : [];
+        const arr = Array.isArray(sJson)
+          ? sJson
+          : Array.isArray(sJson?.results)
+            ? sJson.results
+            : Array.isArray(sJson?.data)
+              ? sJson.data
+              : [];
         const picked = pickByCode(arr, n.upper);
-        if (picked) setData(picked); else setError(json?.error || "Code not found");
+        if (picked) setData(picked);
+        else setError(json?.error || "Code not found");
       } else {
         setData(json);
       }
@@ -106,16 +127,48 @@ export default function LookupPage() {
     }
   }
 
-  const displayName = data && getVal(data, ["displayName", "display_name", "name", "title"], "–");
-  const englishName = data && getVal(data, ["englishName", "english_name", "en", "labels.en"], "");
-  const hindiName = data && getVal(data, ["hindiName", "hindi_name", "hi", "labels.hi"], "");
-  const synonymsRaw = data && getVal(data, ["synonyms", "syns", "altLabels", "alt_labels"], []);
-  const synonyms = Array.isArray(synonymsRaw) ? synonymsRaw.join(", ") : typeof synonymsRaw === "string" ? synonymsRaw : "";
-  const codeVal = data && getVal(data, ["namasteCode", "namaste_code", "code", "id"], "–");
+  const displayName =
+    data && getVal(data, ["displayName", "display_name", "name", "title"], "–");
+  const englishName =
+    data &&
+    getVal(data, ["englishName", "english_name", "en", "labels.en"], "");
+  const hindiName =
+    data && getVal(data, ["hindiName", "hindi_name", "hi", "labels.hi"], "");
+  const synonymsRaw =
+    data && getVal(data, ["synonyms", "syns", "altLabels", "alt_labels"], []);
+  const synonyms = Array.isArray(synonymsRaw)
+    ? synonymsRaw.join(", ")
+    : typeof synonymsRaw === "string"
+      ? synonymsRaw
+      : "";
+  const codeVal =
+    data && getVal(data, ["namasteCode", "namaste_code", "code", "id"], "–");
 
-  const shownKeys = new Set(["displayName", "display_name", "name", "title", "englishName", "english_name", "en", "labels", "hindiName", "hindi_name", "hi", "synonyms", "syns", "altLabels", "alt_labels", "namasteCode", "namaste_code", "code", "id"]);
+  const shownKeys = new Set([
+    "displayName",
+    "display_name",
+    "name",
+    "title",
+    "englishName",
+    "english_name",
+    "en",
+    "labels",
+    "hindiName",
+    "hindi_name",
+    "hi",
+    "synonyms",
+    "syns",
+    "altLabels",
+    "alt_labels",
+    "namasteCode",
+    "namaste_code",
+    "code",
+    "id",
+  ]);
   const extraEntries = data
-    ? Object.entries(data as Record<string, any>).filter(([k]) => !shownKeys.has(k))
+    ? Object.entries(data as Record<string, any>).filter(
+        ([k]) => !shownKeys.has(k),
+      )
     : [];
 
   return (
@@ -123,7 +176,9 @@ export default function LookupPage() {
       <section className="container py-10 md:py-12">
         <div className="max-w-3xl">
           <h1 className="text-2xl md:text-3xl font-bold">Lookup</h1>
-          <p className="text-muted-foreground mt-2">Enter a NAMASTE code to view the full record.</p>
+          <p className="text-muted-foreground mt-2">
+            Enter a NAMASTE code to view the full record.
+          </p>
         </div>
 
         <div className="mt-6 max-w-3xl">
@@ -132,10 +187,23 @@ export default function LookupPage() {
               <CardTitle className="text-base">Lookup by Code</CardTitle>
             </CardHeader>
             <CardContent>
-              <form className="flex flex-col sm:flex-row gap-2" onSubmit={onSubmit}>
-                <Label htmlFor="code" className="sr-only">Code</Label>
-                <Input id="code" value={code} onChange={(e) => setCode(e.target.value)} placeholder="Enter NAMASTE code (e.g., NAMASTE1234)" className="h-12 text-base" />
-                <Button type="submit" disabled={loading}>{loading ? "Looking…" : "Lookup"}</Button>
+              <form
+                className="flex flex-col sm:flex-row gap-2"
+                onSubmit={onSubmit}
+              >
+                <Label htmlFor="code" className="sr-only">
+                  Code
+                </Label>
+                <Input
+                  id="code"
+                  value={code}
+                  onChange={(e) => setCode(e.target.value)}
+                  placeholder="Enter NAMASTE code (e.g., NAMASTE1234)"
+                  className="h-12 text-base"
+                />
+                <Button type="submit" disabled={loading}>
+                  {loading ? "Looking…" : "Lookup"}
+                </Button>
               </form>
             </CardContent>
           </Card>
@@ -144,7 +212,9 @@ export default function LookupPage() {
         {error && (
           <div className="mt-6 max-w-3xl">
             <Card className="border-destructive/30">
-              <CardContent className="p-6 text-destructive">{error}</CardContent>
+              <CardContent className="p-6 text-destructive">
+                {error}
+              </CardContent>
             </Card>
           </div>
         )}
@@ -168,7 +238,9 @@ export default function LookupPage() {
                 </div>
                 {extraEntries.length > 0 && (
                   <div className="pt-2">
-                    <h3 className="text-sm font-semibold text-muted-foreground">Additional Metadata</h3>
+                    <h3 className="text-sm font-semibold text-muted-foreground">
+                      Additional Metadata
+                    </h3>
                     <div className="divide-y mt-2">
                       {extraEntries.map(([k, v]) => (
                         <Entry key={k} label={k} value={v} />

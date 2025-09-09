@@ -129,7 +129,8 @@ export default function SearchPage() {
   const suggestions = items.slice(0, 8);
 
   useEffect(() => {
-    const shouldOpen = focused && !isFetching && suggestions.length > 0 && q.length > 0;
+    const shouldOpen =
+      focused && !isFetching && suggestions.length > 0 && q.length > 0;
     setIsSugOpen(shouldOpen);
   }, [focused, isFetching, suggestions.length, q]);
 
@@ -148,7 +149,9 @@ export default function SearchPage() {
               <CardTitle className="text-base">Search Terms</CardTitle>
             </CardHeader>
             <CardContent>
-              <Label htmlFor="q" className="sr-only">Search</Label>
+              <Label htmlFor="q" className="sr-only">
+                Search
+              </Label>
               <div className="relative">
                 <Input
                   id="q"
@@ -165,21 +168,44 @@ export default function SearchPage() {
                 {isSugOpen && (
                   <div className="absolute z-20 mt-2 w-full min-w-[16rem] md:w-[36rem] rounded-md border bg-popover text-popover-foreground shadow-md p-1">
                     {suggestions.length === 0 ? (
-                      <div className="px-3 py-2 text-sm text-muted-foreground">No suggestions</div>
+                      <div className="px-3 py-2 text-sm text-muted-foreground">
+                        No suggestions
+                      </div>
                     ) : (
                       suggestions.map((item: any, idx: number) => {
-                        const name = getVal(item, ["displayName","display_name","name","title"]);
-                        const code = getVal(item, ["namasteCode","namaste_code","code","id"], "");
+                        const name = getVal(item, [
+                          "displayName",
+                          "display_name",
+                          "name",
+                          "title",
+                        ]);
+                        const code = getVal(
+                          item,
+                          ["namasteCode", "namaste_code", "code", "id"],
+                          "",
+                        );
                         return (
                           <button
                             type="button"
                             key={idx}
                             className="w-full text-left rounded-sm px-3 py-2 hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground outline-none"
                             onMouseDown={(e) => e.preventDefault()}
-                            onClick={() => { setIsSugOpen(false); openDetails(typeof code === 'string' ? code : undefined, item); }}
+                            onClick={() => {
+                              setIsSugOpen(false);
+                              openDetails(
+                                typeof code === "string" ? code : undefined,
+                                item,
+                              );
+                            }}
                           >
-                            <div className="text-sm font-medium leading-tight line-clamp-1">{name}</div>
-                            {code && <div className="text-[12px] text-muted-foreground">{code}</div>}
+                            <div className="text-sm font-medium leading-tight line-clamp-1">
+                              {name}
+                            </div>
+                            {code && (
+                              <div className="text-[12px] text-muted-foreground">
+                                {code}
+                              </div>
+                            )}
                           </button>
                         );
                       })
