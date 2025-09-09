@@ -12,9 +12,7 @@ export function Layout({ children }: PropsWithChildren) {
       <div className="relative z-10">
         <Header />
       </div>
-      <main className="flex-1 relative z-10">
-        {children}
-      </main>
+      <main className="flex-1 relative z-10">{children}</main>
       <footer className="border-t relative z-10">
         <div className="container py-6 text-sm text-muted-foreground flex items-center justify-between">
           <p>© {new Date().getFullYear()} Ayush–ICD Integration</p>

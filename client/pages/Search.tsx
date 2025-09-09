@@ -4,7 +4,15 @@ import { Layout } from "@/components/site/Layout";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogClose,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
 const BASE_URL = "https://namaste-te4u.onrender.com/api/v1/terminology";
@@ -64,7 +72,9 @@ export default function SearchPage() {
     queryKey: ["search", q],
     enabled: q.length > 0,
     queryFn: async () => {
-      const res = await fetch(`${BASE_URL}/search?query=${encodeURIComponent(q)}`);
+      const res = await fetch(
+        `${BASE_URL}/search?query=${encodeURIComponent(q)}`,
+      );
       if (!res.ok) throw new Error("Failed to fetch");
       return res.json();
     },
@@ -90,7 +100,9 @@ export default function SearchPage() {
     queryKey: ["lookup", selectedCode],
     enabled: open && !!selectedCode,
     queryFn: async () => {
-      const res = await fetch(`${BASE_URL}/lookup/${encodeURIComponent(selectedCode!)}`);
+      const res = await fetch(
+        `${BASE_URL}/lookup/${encodeURIComponent(selectedCode!)}`,
+      );
       if (!res.ok) throw new Error("Failed to fetch");
       return res.json();
     },
@@ -121,7 +133,9 @@ export default function SearchPage() {
           </p>
         </div>
         <div className="mt-6 max-w-3xl">
-          <Label htmlFor="q" className="sr-only">Search</Label>
+          <Label htmlFor="q" className="sr-only">
+            Search
+          </Label>
           <Input
             id="q"
             value={query}
@@ -133,10 +147,14 @@ export default function SearchPage() {
 
         <div className="mt-6">
           {q.length === 0 && (
-            <p className="text-muted-foreground">Type a term to begin searching. You can also paste a NAMASTE code.</p>
+            <p className="text-muted-foreground">
+              Type a term to begin searching. You can also paste a NAMASTE code.
+            </p>
           )}
           {isError && (
-            <p className="text-destructive">There was an error fetching results.</p>
+            <p className="text-destructive">
+              There was an error fetching results.
+            </p>
           )}
           {isFetching && q.length > 0 && (
             <p className="text-muted-foreground">Searching…</p>
@@ -144,18 +162,26 @@ export default function SearchPage() {
 
           {looksLikeCode && codeSuggest.data && (
             <div className="mb-4">
-              <Card className="border ring-1 ring-primary/20 cursor-pointer hover:shadow-md transition" onClick={() => openDetails(q)}>
+              <Card
+                className="border ring-1 ring-primary/20 cursor-pointer hover:shadow-md transition"
+                onClick={() => openDetails(q)}
+              >
                 <CardHeader>
                   <CardTitle className="text-base">Code match: {q}</CardTitle>
                 </CardHeader>
-                <CardContent className="text-sm text-muted-foreground">Open details for {q}</CardContent>
+                <CardContent className="text-sm text-muted-foreground">
+                  Open details for {q}
+                </CardContent>
               </Card>
             </div>
           )}
 
-          {q.length > 0 && !isFetching && items.length === 0 && !codeSuggest.data && (
-            <p className="text-muted-foreground">No matches found.</p>
-          )}
+          {q.length > 0 &&
+            !isFetching &&
+            items.length === 0 &&
+            !codeSuggest.data && (
+              <p className="text-muted-foreground">No matches found.</p>
+            )}
 
           <div className="grid gap-4 md:gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {items.map((item: any, idx: number) => {
@@ -165,27 +191,26 @@ export default function SearchPage() {
                 "name",
                 "title",
               ]);
-              const englishName = getVal(item, [
-                "englishName",
-                "english_name",
-                "en",
-                "labels.en",
-              ], "");
-              const hindiName = getVal(item, [
-                "hindiName",
-                "hindi_name",
-                "hi",
-                "labels.hi",
-              ], "");
-              const synonymsRaw = getVal(item, [
-                "synonyms",
-                "syns",
-                "altLabels",
-                "alt_labels",
-              ], [] as any);
+              const englishName = getVal(
+                item,
+                ["englishName", "english_name", "en", "labels.en"],
+                "",
+              );
+              const hindiName = getVal(
+                item,
+                ["hindiName", "hindi_name", "hi", "labels.hi"],
+                "",
+              );
+              const synonymsRaw = getVal(
+                item,
+                ["synonyms", "syns", "altLabels", "alt_labels"],
+                [] as any,
+              );
               const synonyms = Array.isArray(synonymsRaw)
                 ? synonymsRaw.join(", ")
-                : (typeof synonymsRaw === "string" ? synonymsRaw : "");
+                : typeof synonymsRaw === "string"
+                  ? synonymsRaw
+                  : "";
               const code = getVal(item, [
                 "namasteCode",
                 "namaste_code",
@@ -194,9 +219,20 @@ export default function SearchPage() {
               ]);
 
               return (
-                <Card key={idx} className="border hover:shadow-md transition-shadow cursor-pointer" onClick={() => openDetails(typeof code === 'string' ? code : undefined, item)}>
+                <Card
+                  key={idx}
+                  className="border hover:shadow-md transition-shadow cursor-pointer"
+                  onClick={() =>
+                    openDetails(
+                      typeof code === "string" ? code : undefined,
+                      item,
+                    )
+                  }
+                >
                   <CardHeader>
-                    <CardTitle className="text-base line-clamp-2">{displayName}</CardTitle>
+                    <CardTitle className="text-base line-clamp-2">
+                      {displayName}
+                    </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-2 text-sm">
                     {englishName && (
@@ -214,7 +250,12 @@ export default function SearchPage() {
                     {synonyms && (
                       <div>
                         <p className="text-muted-foreground">Synonyms</p>
-                        <p className="font-medium line-clamp-3" title={synonyms}>{synonyms}</p>
+                        <p
+                          className="font-medium line-clamp-3"
+                          title={synonyms}
+                        >
+                          {synonyms}
+                        </p>
                       </div>
                     )}
                     <div className="flex items-center justify-between pt-2">
@@ -229,7 +270,10 @@ export default function SearchPage() {
         </div>
       </section>
 
-      <Dialog open={open} onOpenChange={(v) => (v ? setOpen(true) : closeDetails())}>
+      <Dialog
+        open={open}
+        onOpenChange={(v) => (v ? setOpen(true) : closeDetails())}
+      >
         <DialogContent className="max-w-md sm:max-w-lg md:max-w-xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Terminology Details</DialogTitle>
@@ -243,16 +287,20 @@ export default function SearchPage() {
               <p className="text-destructive py-2">Failed to load details.</p>
             )}
             {!selectedCode && !selectedRecord && (
-              <p className="text-muted-foreground py-2">No details available.</p>
+              <p className="text-muted-foreground py-2">
+                No details available.
+              </p>
             )}
             {selectedRecord &&
-              Object.entries(selectedRecord as Record<string, any>).map(([k, v]) => (
-                <Entry key={k} label={k} value={v} />
-              ))}
+              Object.entries(selectedRecord as Record<string, any>).map(
+                ([k, v]) => <Entry key={k} label={k} value={v} />,
+              )}
           </div>
           <DialogFooter>
             <DialogClose asChild>
-              <Button type="button" variant="outline">Close</Button>
+              <Button type="button" variant="outline">
+                Close
+              </Button>
             </DialogClose>
           </DialogFooter>
         </DialogContent>

@@ -12,7 +12,8 @@ export default function AboutPage() {
         <div className="max-w-2xl mb-8">
           <h1 className="text-3xl md:text-4xl font-bold">About</h1>
           <p className="mt-2 text-muted-foreground">
-            Ayusandhi bridges NAMASTE codes with ICD‑11 TM2 and modern biomedicine, enabling dual‑coding workflows for Ayush systems.
+            Ayusandhi bridges NAMASTE codes with ICD‑11 TM2 and modern
+            biomedicine, enabling dual‑coding workflows for Ayush systems.
           </p>
         </div>
 
@@ -25,7 +26,9 @@ export default function AboutPage() {
             </CardHeader>
             <CardContent className="space-y-3 text-sm md:text-base">
               <p>
-                A fast, standards‑aligned terminology service and UI that lets clinicians and developers search, map, and integrate terminology with confidence.
+                A fast, standards‑aligned terminology service and UI that lets
+                clinicians and developers search, map, and integrate terminology
+                with confidence.
               </p>
               <ul className="list-disc pl-5 text-muted-foreground space-y-1">
                 <li>Dual coding: NAMASTE ⇄ ICD‑11 TM2</li>
@@ -44,7 +47,9 @@ export default function AboutPage() {
             <CardContent className="text-sm md:text-base">
               <ul className="space-y-2">
                 <li>
-                  <Badge variant="secondary" className="mr-2">FHIR</Badge>
+                  <Badge variant="secondary" className="mr-2">
+                    FHIR
+                  </Badge>
                   R4 Terminology Services
                 </li>
                 <li>India EHR Standards</li>
@@ -76,7 +81,8 @@ export default function AboutPage() {
             </CardHeader>
             <CardContent className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-sm md:text-base">
               <p className="text-muted-foreground">
-                Explore the terminology catalog and open detailed records in a click.
+                Explore the terminology catalog and open detailed records in a
+                click.
               </p>
               <Button asChild>
                 <Link to="/search" className="flex items-center gap-2">

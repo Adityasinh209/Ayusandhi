@@ -8,7 +8,7 @@ const navLinkCls = ({ isActive }: { isActive: boolean }) =>
     "px-3 py-2 text-sm font-medium rounded-md transition-colors",
     isActive
       ? "bg-primary/10 text-primary"
-      : "text-muted-foreground hover:text-foreground hover:bg-muted"
+      : "text-muted-foreground hover:text-foreground hover:bg-muted",
   );
 
 export function Header() {
