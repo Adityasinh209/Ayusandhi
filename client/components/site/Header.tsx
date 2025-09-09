@@ -36,6 +36,7 @@ export function Header() {
           <Button asChild size="sm" className="hidden md:inline-flex">
             <Link to="/search">Search Terminology</Link>
           </Button>
+          <LookupQuick />
           <ThemeToggle />
         </div>
       </div>
