@@ -145,13 +145,48 @@ export default function SearchPage() {
             </CardHeader>
             <CardContent>
               <Label htmlFor="q" className="sr-only">Search</Label>
-              <Input
-                id="q"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search NAMASTE / ICD terms or code…"
-                className="h-12 text-base"
-              />
+              <div className="relative">
+                <DropdownMenu open={isSugOpen} onOpenChange={setIsSugOpen}>
+                  <DropdownMenuTrigger asChild>
+                    <Input
+                      id="q"
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                      onFocus={() => setFocused(true)}
+                      onBlur={() => setTimeout(() => setFocused(false), 120)}
+                      placeholder="Search NAMASTE / ICD terms or code…"
+                      className="h-12 text-base"
+                      onKeyDown={(e) => {
+                        if (e.key === "Escape") setIsSugOpen(false);
+                      }}
+                      onInput={() => {
+                        setIsSugOpen(true);
+                      }}
+                    />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start" sideOffset={6} className="w-full min-w-[16rem] md:w-[36rem] p-1 rounded-md shadow-lg">
+                    {suggestions.length === 0 ? (
+                      <div className="px-3 py-2 text-sm text-muted-foreground">No suggestions</div>
+                    ) : (
+                      suggestions.map((item: any, idx: number) => {
+                        const name = getVal(item, ["displayName","display_name","name","title"]);
+                        const code = getVal(item, ["namasteCode","namaste_code","code","id"], "");
+                        return (
+                          <DropdownMenuItem
+                            key={idx}
+                            className="flex flex-col items-start gap-0.5 rounded-sm"
+                            onSelect={(e) => { e.preventDefault(); setIsSugOpen(false); openDetails(typeof code === 'string' ? code : undefined, item); }}
+                            onClick={() => { setIsSugOpen(false); openDetails(typeof code === 'string' ? code : undefined, item); }}
+                          >
+                            <span className="text-sm font-medium leading-tight line-clamp-1">{name}</span>
+                            {code && <span className="text-[12px] text-muted-foreground">{code}</span>}
+                          </DropdownMenuItem>
+                        );
+                      })
+                    )}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             </CardContent>
           </Card>
         </div>
