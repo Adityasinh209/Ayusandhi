@@ -1,6 +1,7 @@
 import { Link, NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { ThemeToggle } from "./ThemeToggle";
 
 const navLinkCls = ({ isActive }: { isActive: boolean }) =>
   cn(
@@ -38,6 +39,7 @@ export function Header() {
           <Button asChild size="sm" className="hidden md:inline-flex">
             <Link to="/search">Search Terminology</Link>
           </Button>
+          <ThemeToggle />
         </div>
       </div>
       <div className="md:hidden border-t">
