@@ -206,6 +206,13 @@ export default function SearchPage() {
             <p className="text-muted-foreground">Searching…</p>
           )}
 
+          {/* control dropdown open state based on focus and items */}
+          {(() => {
+            const shouldOpen = focused && !isFetching && suggestions.length > 0 && q.length > 0;
+            if (isSugOpen !== shouldOpen) setTimeout(() => setIsSugOpen(shouldOpen), 0);
+            return null;
+          })()}
+
           {looksLikeCode && codeSuggest.data && (
             <div className="mb-4 max-w-3xl">
               <Card
