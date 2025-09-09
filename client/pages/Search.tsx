@@ -132,17 +132,43 @@ export default function SearchPage() {
             Search NAMASTE and ICD‑11 TM2 terms. Start typing to see results.
           </p>
         </div>
-        <div className="mt-6 max-w-3xl">
-          <Label htmlFor="q" className="sr-only">
-            Search
-          </Label>
-          <Input
-            id="q"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search NAMASTE / ICD terms or code…"
-            className="h-12 text-base"
-          />
+        <div className="mt-6 grid gap-4 md:gap-6 max-w-3xl">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">Search Terms</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Label htmlFor="q" className="sr-only">Search</Label>
+              <Input
+                id="q"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search NAMASTE / ICD terms…"
+                className="h-12 text-base"
+              />
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">Lookup by Code</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <form
+                className="flex flex-col sm:flex-row gap-2"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const form = e.currentTarget as HTMLFormElement;
+                  const fd = new FormData(form);
+                  const code = String(fd.get("code") || "").trim();
+                  if (code) openDetails(code);
+                }}
+              >
+                <Input name="code" placeholder="Enter NAMASTE code (e.g., NAMASTE1234)" className="h-12 text-base" />
+                <Button type="submit">Open Details</Button>
+              </form>
+            </CardContent>
+          </Card>
         </div>
 
         <div className="mt-6">
@@ -161,7 +187,7 @@ export default function SearchPage() {
           )}
 
           {looksLikeCode && codeSuggest.data && (
-            <div className="mb-4">
+            <div className="mb-4 max-w-3xl">
               <Card
                 className="border ring-1 ring-primary/20 cursor-pointer hover:shadow-md transition"
                 onClick={() => openDetails(q)}
