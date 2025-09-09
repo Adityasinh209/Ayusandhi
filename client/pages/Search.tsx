@@ -4,6 +4,8 @@ import { Layout } from "@/components/site/Layout";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const BASE_URL = "https://namaste-te4u.onrender.com/api/v1/terminology";
@@ -42,9 +44,22 @@ function getVal(obj: any, keys: string[], fallback = "–") {
   return fallback;
 }
 
+function Entry({ label, value }: { label: string; value: any }) {
+  return (
+    <div className="grid grid-cols-3 gap-2 py-2">
+      <div className="col-span-1 text-sm text-muted-foreground">{label}</div>
+      <div className="col-span-2 break-words font-medium text-sm">
+        {typeof value === "object" ? JSON.stringify(value) : String(value)}
+      </div>
+    </div>
+  );
+}
+
 export default function SearchPage() {
   const [query, setQuery] = useState("");
   const q = useDebounced(query.trim(), 350);
+  const qLower = q.toLowerCase();
+  const looksLikeCode = qLower.startsWith("namaste");
 
   const { data, isFetching, isError } = useQuery({
     queryKey: ["search", q],
@@ -57,6 +72,45 @@ export default function SearchPage() {
   });
 
   const items = normalizeResults(data);
+
+  const [open, setOpen] = useState(false);
+  const [selectedCode, setSelectedCode] = useState<string | null>(null);
+  const [fallbackRecord, setFallbackRecord] = useState<any | null>(null);
+
+  const codeSuggest = useQuery({
+    queryKey: ["lookup_suggest", qLower],
+    enabled: looksLikeCode,
+    queryFn: async () => {
+      const res = await fetch(`${BASE_URL}/lookup/${encodeURIComponent(q)}`);
+      if (!res.ok) throw new Error("Failed to fetch");
+      return res.json();
+    },
+  });
+
+  const selectedLookup = useQuery({
+    queryKey: ["lookup", selectedCode],
+    enabled: open && !!selectedCode,
+    queryFn: async () => {
+      const res = await fetch(`${BASE_URL}/lookup/${encodeURIComponent(selectedCode!)}`);
+      if (!res.ok) throw new Error("Failed to fetch");
+      return res.json();
+    },
+  });
+
+  const openDetails = (code?: string, record?: any) => {
+    if (code) setSelectedCode(code);
+    else setSelectedCode(null);
+    setFallbackRecord(record ?? null);
+    setOpen(true);
+  };
+
+  const closeDetails = () => {
+    setOpen(false);
+    setSelectedCode(null);
+    setFallbackRecord(null);
+  };
+
+  const selectedRecord = selectedLookup.data ?? fallbackRecord ?? null;
 
   return (
     <Layout>
@@ -80,7 +134,7 @@ export default function SearchPage() {
 
         <div className="mt-6">
           {q.length === 0 && (
-            <p className="text-muted-foreground">Type a term to begin searching.</p>
+            <p className="text-muted-foreground">Type a term to begin searching. You can also paste a NAMASTE code.</p>
           )}
           {isError && (
             <p className="text-destructive">There was an error fetching results.</p>
@@ -89,7 +143,18 @@ export default function SearchPage() {
             <p className="text-muted-foreground">Searching…</p>
           )}
 
-          {q.length > 0 && !isFetching && items.length === 0 && (
+          {looksLikeCode && codeSuggest.data && (
+            <div className="mb-4">
+              <Card className="border ring-1 ring-primary/20 cursor-pointer hover:shadow-md transition" onClick={() => openDetails(q)}>
+                <CardHeader>
+                  <CardTitle className="text-base">Code match: {q}</CardTitle>
+                </CardHeader>
+                <CardContent className="text-sm text-muted-foreground">Open details for {q}</CardContent>
+              </Card>
+            </div>
+          )}
+
+          {q.length > 0 && !isFetching && items.length === 0 && !codeSuggest.data && (
             <p className="text-muted-foreground">No matches found.</p>
           )}
 
@@ -130,7 +195,7 @@ export default function SearchPage() {
               ]);
 
               return (
-                <Card key={idx} className="border hover:shadow-md transition-shadow">
+                <Card key={idx} className="border hover:shadow-md transition-shadow cursor-pointer" onClick={() => openDetails(typeof code === 'string' ? code : undefined, item)}>
                   <CardHeader>
                     <CardTitle className="text-base line-clamp-2">{displayName}</CardTitle>
                   </CardHeader>
@@ -164,6 +229,35 @@ export default function SearchPage() {
           </div>
         </div>
       </section>
+
+      <Dialog open={open} onOpenChange={(v) => (v ? setOpen(true) : closeDetails())}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Terminology Details</DialogTitle>
+            <DialogDescription>Structured record view</DialogDescription>
+          </DialogHeader>
+          <div className="divide-y">
+            {selectedCode && selectedLookup.isLoading && (
+              <p className="text-muted-foreground py-2">Loading…</p>
+            )}
+            {selectedCode && selectedLookup.isError && (
+              <p className="text-destructive py-2">Failed to load details.</p>
+            )}
+            {!selectedCode && !selectedRecord && (
+              <p className="text-muted-foreground py-2">No details available.</p>
+            )}
+            {selectedRecord &&
+              Object.entries(selectedRecord as Record<string, any>).map(([k, v]) => (
+                <Entry key={k} label={k} value={v} />
+              ))}
+          </div>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button type="button" variant="outline">Close</Button>
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Layout>
   );
 }

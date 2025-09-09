@@ -23,7 +23,7 @@ export default function Index() {
                 <Link to="/search">Search Terminology</Link>
               </Button>
               <Button asChild size="lg" variant="outline">
-                <Link to="/lookup">Lookup by Code</Link>
+                <Link to="/about">Learn More</Link>
               </Button>
             </div>
             <div className="flex items-center gap-6 text-sm text-muted-foreground pt-2">
