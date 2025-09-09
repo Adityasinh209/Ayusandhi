@@ -40,7 +40,7 @@ export function LookupQuick() {
     return fallback;
   }
   function extractCode(obj: any): string | null {
-    const c = getVal(obj, ["namasteCode", "namaste_code", "code", "id"], null);
+    const c = getVal(obj, ["namasteCode", "namaste_code", "code", "id", "Code", "CODE"], null);
     return typeof c === "string" ? c : null;
   }
   function pickByCode(results: any[], input: string) {
