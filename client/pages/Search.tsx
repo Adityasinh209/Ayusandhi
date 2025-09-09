@@ -127,7 +127,7 @@ export default function SearchPage() {
             id="q"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search NAMASTE / ICD terms…"
+            placeholder="Search NAMASTE / ICD terms or code…"
             className="h-12 text-base"
           />
         </div>

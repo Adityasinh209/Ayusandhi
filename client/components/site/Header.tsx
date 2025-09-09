@@ -28,9 +28,7 @@ export function Header() {
           <NavLink to="/search" className={navLinkCls}>
             Search
           </NavLink>
-          <NavLink to="/lookup" className={navLinkCls}>
-            Lookup
-          </NavLink>
+
           <NavLink to="/about" className={navLinkCls}>
             About
           </NavLink>
@@ -50,9 +48,7 @@ export function Header() {
           <NavLink to="/search" className={navLinkCls}>
             Search
           </NavLink>
-          <NavLink to="/lookup" className={navLinkCls}>
-            Lookup
-          </NavLink>
+
           <NavLink to="/about" className={navLinkCls}>
             About
           </NavLink>
