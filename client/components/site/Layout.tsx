@@ -15,7 +15,7 @@ export function Layout({ children }: PropsWithChildren) {
       <main className="flex-1 relative z-10">{children}</main>
       <footer className="border-t relative z-10">
         <div className="container py-6 text-sm text-muted-foreground flex items-center justify-between">
-          <p>© {new Date().getFullYear()} Ayush–ICD Integration</p>
+          <p>© {new Date().getFullYear()} Ayusandhi</p>
           <p className="hidden sm:block">FHIR R4 • NAMASTE • ICD‑11 TM2</p>
         </div>
       </footer>

@@ -16,9 +16,8 @@ export function Header() {
     <header className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
         <Link to="/" className="flex items-center gap-2">
-          <div className="h-8 w-8 rounded-md bg-gradient-to-br from-primary to-emerald-500" />
           <span className="text-base sm:text-lg font-semibold tracking-tight">
-            Ayush–ICD Integration
+            Ayusandhi
           </span>
         </Link>
         <nav className="hidden md:flex items-center gap-1">
