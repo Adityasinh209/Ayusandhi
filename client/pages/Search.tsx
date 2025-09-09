@@ -83,6 +83,9 @@ export default function SearchPage() {
 
   const items = normalizeResults(data);
 
+  const [isSugOpen, setIsSugOpen] = useState(false);
+  const [focused, setFocused] = useState(false);
+
   const [open, setOpen] = useState(false);
   const [selectedCode, setSelectedCode] = useState<string | null>(null);
   const [fallbackRecord, setFallbackRecord] = useState<any | null>(null);
