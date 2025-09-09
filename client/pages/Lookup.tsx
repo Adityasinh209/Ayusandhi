@@ -45,18 +45,43 @@ export default function LookupPage() {
   const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<any | null>(null);
 
+  function normalizeCode(s: string) {
+    const raw = s.trim();
+    return { raw, upper: raw.toUpperCase(), stripped: raw.replace(/[^A-Za-z0-9]/g, "").toUpperCase() };
+  }
+
+  function extractCode(obj: any): string | null {
+    const c = getVal(obj, ["namasteCode", "namaste_code", "code", "id"], null);
+    return typeof c === "string" ? c : null;
+  }
+
+  function pickByCode(results: any[], input: string) {
+    const n = normalizeCode(input);
+    for (const it of results) {
+      const c = extractCode(it);
+      if (!c) continue;
+      const cn = normalizeCode(String(c));
+      if (cn.upper === n.upper || cn.stripped === n.stripped) return it;
+    }
+    return results[0] ?? null;
+  }
+
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const value = code.trim();
-    if (!value) return;
+    const n = normalizeCode(code);
+    if (!n.raw) return;
     setLoading(true);
     setError(null);
     setData(null);
     try {
-      const res = await fetch(`${BASE_URL}/lookup/${encodeURIComponent(value)}`);
-      const json = await res.json().catch(() => null);
+      let res = await fetch(`${BASE_URL}/lookup/${encodeURIComponent(n.upper)}`);
+      let json = await res.json().catch(() => null);
       if (!res.ok) {
-        setError(json?.error || "Code not found");
+        const s = await fetch(`${BASE_URL}/search?query=${encodeURIComponent(n.upper)}`);
+        const sJson = await s.json().catch(() => null);
+        const arr = Array.isArray(sJson) ? sJson : Array.isArray(sJson?.results) ? sJson.results : Array.isArray(sJson?.data) ? sJson.data : [];
+        const picked = pickByCode(arr, n.upper);
+        if (picked) setData(picked); else setError(json?.error || "Code not found");
       } else {
         setData(json);
       }
