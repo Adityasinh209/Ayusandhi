@@ -49,7 +49,7 @@ export function LookupQuick() {
       <DialogTrigger asChild>
         <Button variant="outline" size="sm">Lookup</Button>
       </DialogTrigger>
-      <DialogContent className="max-w-md sm:max-w-lg max-h-[80vh] overflow-y-auto">
+      <DialogContent className="max-w-md sm:max-w-lg md:max-w-xl max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Lookup by Code</DialogTitle>
           <DialogDescription>Enter a NAMASTE code to view full details.</DialogDescription>
@@ -61,12 +61,11 @@ export function LookupQuick() {
           <Input
             value={code}
             onChange={(e) => setCode(e.target.value)}
-            placeholder="e.g., NAM.001.552.01 or NAMASTE1234"
+            placeholder="Enter NAMASTE code (e.g., NAMASTE1234)"
             className="h-12 text-base"
           />
-          <Button type="submit" disabled={loading}>{loading ? "Looking…" : "Lookup"}</Button>
+          <Button type="submit" disabled={loading}>{loading ? "Opening…" : "Open Details"}</Button>
         </form>
-        <div className="mt-3 text-sm text-muted-foreground">Tip: You can also paste codes directly in the Search page.</div>
         <div className="mt-4 divide-y">
           {error && <p className="text-destructive py-2">{error}</p>}
           {data && Object.entries(data as Record<string, any>).map(([k, v]) => (
@@ -74,7 +73,7 @@ export function LookupQuick() {
           ))}
         </div>
         <DialogFooter>
-          <Button variant="secondary" type="button" onClick={() => setOpen(false)}>Close</Button>
+          <Button variant="outline" type="button" onClick={() => setOpen(false)}>Close</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
