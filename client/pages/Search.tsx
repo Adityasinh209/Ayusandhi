@@ -127,6 +127,8 @@ export default function SearchPage() {
 
   const selectedRecord = selectedLookup.data ?? fallbackRecord ?? null;
 
+  const suggestions = items.slice(0, 8);
+
   return (
     <Layout>
       <section className="container py-10 md:py-12">
