@@ -51,17 +51,31 @@ export default function LookupPage() {
   }
 
   function extractCode(obj: any): string | null {
-    const c = getVal(obj, ["namasteCode", "namaste_code", "code", "id"], null);
+    const c = getVal(obj, ["namasteCode", "namaste_code", "code", "id", "Code", "CODE"], null);
     return typeof c === "string" ? c : null;
+  }
+
+  function flattenStrings(obj: any, depth = 0): string[] {
+    if (depth > 3 || obj == null) return [];
+    if (typeof obj === "string") return [obj];
+    if (Array.isArray(obj)) return obj.flatMap((v) => flattenStrings(v, depth + 1));
+    if (typeof obj === "object") return Object.values(obj).flatMap((v) => flattenStrings(v, depth + 1));
+    return [];
   }
 
   function pickByCode(results: any[], input: string) {
     const n = normalizeCode(input);
     for (const it of results) {
       const c = extractCode(it);
-      if (!c) continue;
-      const cn = normalizeCode(String(c));
-      if (cn.upper === n.upper || cn.stripped === n.stripped) return it;
+      if (c) {
+        const cn = normalizeCode(String(c));
+        if (cn.upper === n.upper || cn.stripped === n.stripped) return it;
+      }
+      const strings = flattenStrings(it);
+      for (const s of strings) {
+        const sn = normalizeCode(String(s));
+        if (sn.upper === n.upper || sn.stripped === n.stripped) return it;
+      }
     }
     return results[0] ?? null;
   }
@@ -76,7 +90,7 @@ export default function LookupPage() {
     try {
       let res = await fetch(`${BASE_URL}/lookup/${encodeURIComponent(n.upper)}`);
       let json = await res.json().catch(() => null);
-      if (!res.ok) {
+      if (!res.ok || !json) {
         const s = await fetch(`${BASE_URL}/search?query=${encodeURIComponent(n.upper)}`);
         const sJson = await s.json().catch(() => null);
         const arr = Array.isArray(sJson) ? sJson : Array.isArray(sJson?.results) ? sJson.results : Array.isArray(sJson?.data) ? sJson.data : [];
