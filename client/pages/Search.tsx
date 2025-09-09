@@ -14,7 +14,6 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 const BASE_URL = "https://namaste-te4u.onrender.com/api/v1/terminology";
 
@@ -129,6 +128,11 @@ export default function SearchPage() {
 
   const suggestions = items.slice(0, 8);
 
+  useEffect(() => {
+    const shouldOpen = focused && !isFetching && suggestions.length > 0 && q.length > 0;
+    setIsSugOpen(shouldOpen);
+  }, [focused, isFetching, suggestions.length, q]);
+
   return (
     <Layout>
       <section className="container py-10 md:py-12">
@@ -146,25 +150,20 @@ export default function SearchPage() {
             <CardContent>
               <Label htmlFor="q" className="sr-only">Search</Label>
               <div className="relative">
-                <DropdownMenu open={isSugOpen} onOpenChange={setIsSugOpen}>
-                  <DropdownMenuTrigger asChild>
-                    <Input
-                      id="q"
-                      value={query}
-                      onChange={(e) => setQuery(e.target.value)}
-                      onFocus={() => setFocused(true)}
-                      onBlur={() => setTimeout(() => setFocused(false), 120)}
-                      placeholder="Search NAMASTE / ICD terms or code…"
-                      className="h-12 text-base"
-                      onKeyDown={(e) => {
-                        if (e.key === "Escape") setIsSugOpen(false);
-                      }}
-                      onInput={() => {
-                        setIsSugOpen(true);
-                      }}
-                    />
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="start" sideOffset={6} className="w-full min-w-[16rem] md:w-[36rem] p-1 rounded-md shadow-lg">
+                <Input
+                  id="q"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  onFocus={() => setFocused(true)}
+                  onBlur={() => setTimeout(() => setFocused(false), 150)}
+                  placeholder="Search NAMASTE / ICD terms or code…"
+                  className="h-12 text-base"
+                  onKeyDown={(e) => {
+                    if (e.key === "Escape") setIsSugOpen(false);
+                  }}
+                />
+                {isSugOpen && (
+                  <div className="absolute z-20 mt-2 w-full min-w-[16rem] md:w-[36rem] rounded-md border bg-popover text-popover-foreground shadow-md p-1">
                     {suggestions.length === 0 ? (
                       <div className="px-3 py-2 text-sm text-muted-foreground">No suggestions</div>
                     ) : (
@@ -172,20 +171,21 @@ export default function SearchPage() {
                         const name = getVal(item, ["displayName","display_name","name","title"]);
                         const code = getVal(item, ["namasteCode","namaste_code","code","id"], "");
                         return (
-                          <DropdownMenuItem
+                          <button
+                            type="button"
                             key={idx}
-                            className="flex flex-col items-start gap-0.5 rounded-sm"
-                            onSelect={(e) => { e.preventDefault(); setIsSugOpen(false); openDetails(typeof code === 'string' ? code : undefined, item); }}
+                            className="w-full text-left rounded-sm px-3 py-2 hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground outline-none"
+                            onMouseDown={(e) => e.preventDefault()}
                             onClick={() => { setIsSugOpen(false); openDetails(typeof code === 'string' ? code : undefined, item); }}
                           >
-                            <span className="text-sm font-medium leading-tight line-clamp-1">{name}</span>
-                            {code && <span className="text-[12px] text-muted-foreground">{code}</span>}
-                          </DropdownMenuItem>
+                            <div className="text-sm font-medium leading-tight line-clamp-1">{name}</div>
+                            {code && <div className="text-[12px] text-muted-foreground">{code}</div>}
+                          </button>
                         );
                       })
                     )}
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
@@ -205,13 +205,6 @@ export default function SearchPage() {
           {isFetching && q.length > 0 && (
             <p className="text-muted-foreground">Searching…</p>
           )}
-
-          {/* control dropdown open state based on focus and items */}
-          {(() => {
-            const shouldOpen = focused && !isFetching && suggestions.length > 0 && q.length > 0;
-            if (isSugOpen !== shouldOpen) setTimeout(() => setIsSugOpen(shouldOpen), 0);
-            return null;
-          })()}
 
           {looksLikeCode && codeSuggest.data && (
             <div className="mb-4 max-w-3xl">
