@@ -23,26 +23,52 @@ export function LookupQuick() {
   const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<any | null>(null);
 
+  function normalizeCode(s: string) {
+    const raw = s.trim();
+    return { raw, upper: raw.toUpperCase(), stripped: raw.replace(/[^A-Za-z0-9]/g, "").toUpperCase() };
+  }
+  function getVal(obj: any, keys: string[], fallback: any = null) {
+    for (const k of keys) {
+      const parts = k.split(".");
+      let cur: any = obj;
+      let ok = true;
+      for (const p of parts) {
+        if (cur && p in cur) cur = cur[p]; else { ok = false; break; }
+      }
+      if (ok && cur != null && cur !== "") return cur;
+    }
+    return fallback;
+  }
+  function extractCode(obj: any): string | null {
+    const c = getVal(obj, ["namasteCode", "namaste_code", "code", "id"], null);
+    return typeof c === "string" ? c : null;
+  }
+  function pickByCode(results: any[], input: string) {
+    const n = normalizeCode(input);
+    for (const it of results) {
+      const c = extractCode(it);
+      if (!c) continue;
+      const cn = normalizeCode(String(c));
+      if (cn.upper === n.upper || cn.stripped === n.stripped) return it;
+    }
+    return results[0] ?? null;
+  }
+
   async function onLookup(c?: string) {
-    const raw = (c ?? code).trim();
-    if (!raw) return;
-    const value = raw.toUpperCase();
+    const n = normalizeCode(c ?? code);
+    if (!n.raw) return;
     setLoading(true);
     setError(null);
     setData(null);
     try {
-      let res = await fetch(`${BASE_URL}/lookup/${encodeURIComponent(value)}`);
+      let res = await fetch(`${BASE_URL}/lookup/${encodeURIComponent(n.upper)}`);
       let json = await res.json().catch(() => null);
       if (!res.ok) {
-        // Fallback: try search endpoint to find record by code text
-        const s = await fetch(`${BASE_URL}/search?query=${encodeURIComponent(value)}`);
+        const s = await fetch(`${BASE_URL}/search?query=${encodeURIComponent(n.upper)}`);
         const sJson = await s.json().catch(() => null);
         const results = Array.isArray(sJson) ? sJson : Array.isArray(sJson?.results) ? sJson.results : Array.isArray(sJson?.data) ? sJson.data : [];
-        if (results.length > 0) {
-          setData(results[0]);
-        } else {
-          setError(json?.error || "Code not found");
-        }
+        const picked = pickByCode(results, n.upper);
+        if (picked) setData(picked); else setError(json?.error || "Code not found");
       } else {
         setData(json);
       }
