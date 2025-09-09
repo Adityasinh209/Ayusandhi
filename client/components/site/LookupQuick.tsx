@@ -76,7 +76,7 @@ export function LookupQuick() {
     try {
       let res = await fetch(`${BASE_URL}/lookup/${encodeURIComponent(n.upper)}`);
       let json = await res.json().catch(() => null);
-      if (!res.ok) {
+      if (!res.ok || !json) {
         const s = await fetch(`${BASE_URL}/search?query=${encodeURIComponent(n.upper)}`);
         const sJson = await s.json().catch(() => null);
         const results = Array.isArray(sJson) ? sJson : Array.isArray(sJson?.results) ? sJson.results : Array.isArray(sJson?.data) ? sJson.data : [];
