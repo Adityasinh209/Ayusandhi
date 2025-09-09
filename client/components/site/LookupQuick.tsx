@@ -47,7 +47,7 @@ export function LookupQuick() {
   return (
     <Dialog open={open} onOpenChange={(v) => { setOpen(v); if (!v) { setCode(""); setError(null); setData(null);} }}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm">Lookup</Button>
+        <Button variant="outline" size="sm">Lookup by Code</Button>
       </DialogTrigger>
       <DialogContent className="max-w-md sm:max-w-lg md:max-w-xl max-h-[80vh] overflow-y-auto">
         <DialogHeader>
