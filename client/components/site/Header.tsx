@@ -2,6 +2,7 @@ import { Link, NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "./ThemeToggle";
+import { LookupQuick } from "./LookupQuick";
 
 const navLinkCls = ({ isActive }: { isActive: boolean }) =>
   cn(
