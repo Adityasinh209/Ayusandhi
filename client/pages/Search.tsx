@@ -231,7 +231,7 @@ export default function SearchPage() {
       </section>
 
       <Dialog open={open} onOpenChange={(v) => (v ? setOpen(true) : closeDetails())}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-md sm:max-w-lg md:max-w-xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Terminology Details</DialogTitle>
             <DialogDescription>Structured record view</DialogDescription>
