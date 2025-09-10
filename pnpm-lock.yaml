@@ -95,6 +95,12 @@ importers:
       '@react-three/fiber':
         specifier: ^9.1.2
         version: 9.3.0(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(three@0.176.0)
+      '@rollup/rollup-linux-x64-gnu':
+        specifier: ^4.50.1
+        version: 4.50.1
+      '@swc/core-linux-x64-gnu':
+        specifier: ^1.13.5
+        version: 1.13.5
       '@tanstack/react-query':
         specifier: ^5.56.2
         version: 5.84.2(react@18.3.1)
@@ -1212,6 +1218,11 @@ packages:
     cpu: [x64]
     os: [linux]
 
+  '@rollup/rollup-linux-x64-gnu@4.50.1':
+    resolution: {integrity: sha512-MCgtFB2+SVNuQmmjHf+wfI4CMxy3Tk8XjA5Z//A0AKD7QXUYFMQcns91K6dEHBvZPCnhJSyDWLApk40Iq/H3tA==}
+    cpu: [x64]
+    os: [linux]
+
   '@rollup/rollup-linux-x64-musl@4.46.2':
     resolution: {integrity: sha512-7kX69DIrBeD7yNp4A5b81izs8BqoZkCIaxQaOpumcJ1S/kmqNFjPhDu1LHeVXv0SexfHQv5cqHsxLOjETuqDuA==}
     cpu: [x64]
@@ -1264,6 +1275,12 @@ packages:
 
   '@swc/core-linux-x64-gnu@1.13.3':
     resolution: {integrity: sha512-dFXoa0TEhohrKcxn/54YKs1iwNeW6tUkHJgXW33H381SvjKFUV53WR231jh1sWVJETjA3vsAwxKwR23s7UCmUA==}
+    engines: {node: '>=10'}
+    cpu: [x64]
+    os: [linux]
+
+  '@swc/core-linux-x64-gnu@1.13.5':
+    resolution: {integrity: sha512-WD530qvHrki8Ywt/PloKUjaRKgstQqNGvmZl54g06kA+hqtSE2FTG9gngXr3UJxYu/cNAjJYiBifm7+w4nbHbA==}
     engines: {node: '>=10'}
     cpu: [x64]
     os: [linux]
@@ -3505,6 +3522,8 @@ snapshots:
   '@rollup/rollup-linux-x64-gnu@4.46.2':
     optional: true
 
+  '@rollup/rollup-linux-x64-gnu@4.50.1': {}
+
   '@rollup/rollup-linux-x64-musl@4.46.2':
     optional: true
 
@@ -3534,6 +3553,8 @@ snapshots:
 
   '@swc/core-linux-x64-gnu@1.13.3':
     optional: true
+
+  '@swc/core-linux-x64-gnu@1.13.5': {}
 
   '@swc/core-linux-x64-musl@1.13.3':
     optional: true
