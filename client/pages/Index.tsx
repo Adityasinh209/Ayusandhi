@@ -11,7 +11,7 @@ export default function Index() {
     <Layout>
       {/* Hero */}
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,theme(colors.primary/10),transparent_50%),radial-gradient(ellipse_at_bottom_right,theme(colors.emerald.400/10),transparent_40%)]" />
+        <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,hsla(var(--primary),0.1),transparent_50%),radial-gradient(ellipse_at_bottom_right,rgba(52,211,153,0.1),transparent_40%)]" />
         <div className="container grid lg:grid-cols-2 gap-10 py-16 md:py-24 items-center">
           <div className="space-y-6">
             <Badge

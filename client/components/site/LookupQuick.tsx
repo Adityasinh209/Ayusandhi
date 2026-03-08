@@ -96,10 +96,10 @@ export function LookupQuick() {
     setError(null);
     setData(null);
     try {
-      let res = await fetch(
+      const res = await fetch(
         `${BASE_URL}/lookup/${encodeURIComponent(n.upper)}`,
       );
-      let json = await res.json().catch(() => null);
+      const json = await res.json().catch(() => null);
       if (!res.ok || !json) {
         const s = await fetch(
           `${BASE_URL}/search?query=${encodeURIComponent(n.upper)}`,

@@ -49,8 +49,6 @@
     "@radix-ui/react-toggle-group": "^1.1.0",
     "@radix-ui/react-tooltip": "^1.1.4",
     "@react-three/fiber": "^9.1.2",
-    "@rollup/rollup-linux-x64-gnu": "^4.50.1",
-    "@swc/core-linux-x64-gnu": "^1.13.5",
     "@tanstack/react-query": "^5.56.2",
     "@types/three": "^0.176.0",
     "class-variance-authority": "^0.7.1",
@@ -96,7 +94,8 @@
     "tailwindcss": "^3.4.11",
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.0.1",
-    "vite": "^5.4.1"
+    "vite": "^5.4.1",
+    "vitest": "^4.0.18"
   },
   "packageManager": "pnpm@10.14.0+sha512.ad27a79641b49c3e481a16a805baa71817a04bbe06a38d17e60e2eaee83f6a146c6a688125f5792e48dd5ba30e7da52a5cda4c3992b9ccf333f9ce223af84748",
   "version": "0.0.0"
